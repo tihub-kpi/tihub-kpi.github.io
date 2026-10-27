@@ -1,0 +1,308 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>داشبورد مدیریتی شاخص‌های TIHUB</title><script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><style>
+*{box-sizing:border-box}body{margin:0;background:#f1f5f8;color:#1a3543;font:13px Tahoma,Arial}aside{position:fixed;right:0;top:0;bottom:0;width:290px;background:#102f3b;color:#dcecf0;overflow:auto;padding:19px 12px}aside h2{color:white;font-size:18px;margin:8px}aside p{font-size:10px;color:#a7bdc5;margin:0 8px 22px}nav button{font-weight:700;font-size:16px;letter-spacing:-.1px;width:100%;border:0;text-align:right;background:none;color:#dcecf0;padding:12px;border-radius:9px;cursor:pointer;font-family:Tahoma,Arial;font-size:16px;font-weight:700;line-height:1.7;margin-bottom:5px}nav button.active,nav button:hover{background:#009d82;color:white}main{margin-right:290px;padding:22px;max-width:1800px}header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}h1{font-size:21px;margin:0 0 6px}h2{font-size:16px}.sub{font-size:11px;color:#78909c}.panel,.metric{background:white;border:1px solid #e1eaf0;border-radius:13px;padding:18px;box-shadow:0 4px 15px #102f3b08}.panel{margin:14px 0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.metric{border-top:4px solid #00a688}.metric:nth-child(2){border-top-color:#318ce2}.metric:nth-child(3){border-top-color:#f4a53e}.metric:nth-child(4){border-top-color:#9069db}.metric b{display:block;font-size:24px;margin:12px 0 2px}.metric small{color:#77909b;font-size:11px}.grid{display:grid;grid-template-columns:1.45fr 1fr;gap:14px}.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}button.primary{background:#009d82;color:white;border:0;border-radius:8px;padding:11px 18px;cursor:pointer;font-family:inherit}input,select{border:1px solid #d4e2e8;padding:9px;border-radius:8px;font-family:inherit;max-width:240px}.bar{display:grid;grid-template-columns:120px 1fr 80px;gap:9px;align-items:center;margin:10px 0;font-size:11px}.track{background:#eaf2f5;height:22px;border-radius:5px;overflow:hidden}.fill{background:#2b90da;height:100%;border-radius:5px;min-width:2px}.bar:hover .fill{background:#00a688}.bar .track{direction:ltr}.bar .fill{min-width:0}.bar strong{font-size:12px;white-space:nowrap;direction:ltr;text-align:left}.bar{grid-template-columns:120px 1fr 110px}table{width:100%;border-collapse:collapse;font-size:11px}td,th{border-bottom:1px solid #e8eef2;padding:9px;text-align:right}th{background:#f3f7f9;position:sticky;top:0}.scroll{overflow:auto;max-height:410px}.advice{background:#edf8f5;border-right:4px solid #00a688;padding:13px;border-radius:8px;line-height:2;margin:10px 0}.warn{background:#fff7e9;border-right-color:#efaa38}.note{font-size:10px;color:#738b96;line-height:2}.pill{display:inline-block;background:#e5f6f0;color:#007b61;padding:5px 9px;border-radius:8px}.overview{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.overview button{text-align:right;background:white;border:1px solid #dae6ea;border-radius:10px;padding:16px;cursor:pointer;font-family:inherit} .overview button:hover{border-color:#00a688}@media(max-width:950px){aside{position:relative;width:100%;height:auto;max-height:240px}main{margin-right:0}.grid{grid-template-columns:1fr}.metrics,.overview{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.metrics,.overview{grid-template-columns:1fr}}
+ .chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.chart-grid .panel{margin:0}.chart-grid .bar{grid-template-columns:110px minmax(0,1fr) 95px}@media(max-width:1050px){.chart-grid{grid-template-columns:1fr}}
+.calc-btn{border:0;border-radius:9px;background:#086b69;color:white;padding:12px 18px;font:700 13px Tahoma;cursor:pointer;margin:14px 0}.calc-btn:hover{background:#064f4d}
+.calc-overlay{position:fixed;inset:0;background:#09202bc7;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.calc-overlay.show{display:flex}.calc-dialog{background:white;border-radius:14px;width:min(840px,96vw);max-height:88vh;overflow:auto;padding:25px;line-height:2}.calc-close{float:left;border:1px solid #ccd9dd;border-radius:8px;background:#f3f6f7;padding:6px 14px;cursor:pointer}.calc-formula{direction:ltr;text-align:center;background:#f2f7f8;border:1px solid #d8e5e9;border-radius:8px;padding:12px;margin:10px 0;font:700 15px Arial}.calc-dialog table{width:100%;border-collapse:collapse}.calc-dialog th,.calc-dialog td{border:1px solid #e2e9ec;padding:6px 10px;text-align:right}.calc-dialog th{background:#eef5f6}
+
+.compare-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end}.compare-controls label{display:flex;flex-direction:column;gap:6px;font-weight:bold}.compare-controls select{padding:10px;min-width:170px;max-width:260px;border:1px solid #c8d5da;border-radius:7px;background:white}.compare-table{overflow:auto;max-height:620px}.compare-table table{width:100%;border-collapse:collapse;white-space:nowrap}.compare-table th,.compare-table td{padding:10px;border-bottom:1px solid #e1e8ec;text-align:right}.compare-table th{background:#e9f1f3;position:sticky;top:0}.delta-up{color:#a34b2d;font-weight:bold}.delta-down{color:#147e67;font-weight:bold}.compare-note{background:#fff6e3;border-right:4px solid #e4ad4d;padding:12px;border-radius:6px;line-height:2}.compare-chart{margin:8px 0}.compare-chart .bar{margin:8px 0}.period-chip{display:inline-block;padding:4px 10px;background:#eaf2f4;border-radius:15px;margin:4px}.compare-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.compare-actions button{padding:9px 13px;border:1px solid #cbd6dc;border-radius:7px;cursor:pointer;background:white}.compare-actions button.primary{background:#0c7274;color:white}.compare-table .empty{padding:16px}
+
+/* TIHUB Supabase authentication gate */
+body:not(.tihub-authenticated) aside,body:not(.tihub-authenticated) main{display:none!important}
+#tihub-auth{position:fixed;inset:0;z-index:9999;background:#f1f5f8;display:flex;align-items:center;justify-content:center;padding:20px}
+body.tihub-authenticated #tihub-auth{display:none}
+.tihub-login{background:#fff;border:1px solid #dce7ed;border-radius:15px;box-shadow:0 12px 40px #102f3b18;width:min(420px,100%);padding:30px;line-height:2}
+.tihub-login h2{font-size:21px;color:#123b46;margin:0 0 8px}.tihub-login label{display:block;margin-top:12px;font-weight:700}.tihub-login input{width:100%;max-width:none}.tihub-login button{width:100%;margin-top:20px}.tihub-login .error{color:#a13d36;font-size:12px;min-height:30px}
+#tihub-logout{border:1px solid #b7ced0;border-radius:7px;padding:7px 12px;background:white;cursor:pointer;font:12px Tahoma}
+</style><script src="./config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script></head><body><div id="tihub-auth"><form class="tihub-login" id="tihub-login-form"><h2>ورود مدیران TIHUB</h2><p class="note">برای مشاهده داشبورد، با حساب تأییدشده سازمانی وارد شوید.</p><label for="tihub-email">نام کاربری</label><input id="tihub-email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="admin یا manager" required><label for="tihub-password">رمز عبور</label><input id="tihub-password" type="password" autocomplete="current-password" required><button class="primary" type="submit" id="tihub-login-button">ورود به داشبورد</button><p id="tihub-auth-error" class="error" role="alert">در حال بررسی اتصال...</p></form></div><aside><h2>TIHUB | مدیریت شاخص‌ها</h2><p>واحد برنامه‌ریزی TIHUB</p><nav id="nav"></nav></aside><main><header><div><h1 id="title">داشبورد شاخص‌های کلیدی عملیات TIHUB</h1><div class="sub">گزارش مدیریتی ویژه مدیرعامل · داده‌های فایل final export KPIs.xlsx</div></div><div class="toolbar"><span class="pill">۱۴ شاخص عملیاتی</span><button id="tihub-logout" type="button" style="display:none">خروج از حساب</button></div></header>
+<section class="panel"><div class="toolbar"><b>ورود گزارش جدید:</b><input id="file" type="file" accept=".xlsx,.xls,.ods"><button class="primary" id="import">تأیید، ایمپورت و نمایش گزارش</button><label>دوره <input id="period" placeholder="مثلاً ۱۴۰۵/۰۷" value="۱۴۰۵/۰۷"></label><select id="periodSelect"></select><select id="hubSelect"><option value="">همه هاب‌ها</option></select></div><p class="note" id="status">داده‌های نمونه واقعی فایل ارسالی از ابتدا در سامانه قرار گرفته‌اند. برای افزودن گزارش دوره جدید، فایل را انتخاب و دکمه تأیید را بزنید. گزارش‌های ثبت‌شده توسط مدیر سیستم در پایگاه داده مشترک ذخیره می‌شوند و برای مدیران قابل مشاهده‌اند.</p><div class="compare-actions"><button id="backup">دریافت پشتیبان JSON</button><label class="primary" style="cursor:pointer;padding:9px;border-radius:7px;background:#0c7274;color:white">بازیابی پشتیبان JSON <input type="file" id="restore" accept=".json" style="display:none"></label><button id="showCompare" class="primary">مقایسه دوره‌ها</button></div></section>
+<div id="content"></div></main><script>
+const INITIAL=[];
+const DAMAGE_SHEET={"name":"آسیب دیدگی مرسولات ناشی از تخلیه و بارگیری","kind":"hub","headers":["ردیف","نام هاب","تاخیر در ارسال بسته به مسیر","آسیب دیدگی بسته","کسر محتویات بسته","مغایرت بسته","مفقودی بسته","کل"],"rows":[{"hub":"تی هاب","values":[1,"تی هاب",1141,null,null,null,3,1144]},{"hub":"هاب اصفهان (تی هاب)","values":[2,"هاب اصفهان (تی هاب)",337,null,null,null,1,338]},{"hub":"هاب K20","values":[3,"هاب K20",256,null,null,1,null,257]},{"hub":"هاب کرج","values":[4,"هاب کرج",195,null,null,null,1,196]},{"hub":"هاب همدان","values":[5,"هاب همدان",152,null,null,null,null,152]},{"hub":"هاب شرق","values":[6,"هاب شرق",149,null,null,null,1,150]},{"hub":"هاب تبریز","values":[7,"هاب تبریز",68,null,null,null,null,68]},{"hub":"هاب مشهد","values":[8,"هاب مشهد",41,null,null,null,null,41]},{"hub":"هاب بندرعباس","values":[9,"هاب بندرعباس",32,null,null,null,null,32]},{"hub":"هاب اهواز","values":[10,"هاب اهواز",26,null,null,null,null,26]},{"hub":"هاب کرمان (تی هاب)","values":[11,"هاب کرمان (تی هاب)",25,null,null,null,null,25]},{"hub":"هاب شیراز (تی هاب)","values":[12,"هاب شیراز (تی هاب)",19,null,null,null,null,19]},{"hub":"هاب گرگان","values":[13,"هاب گرگان",18,null,null,null,null,18]},{"hub":"هاب رشت (تی هاب)","values":[14,"هاب رشت (تی هاب)",17,null,null,null,null,17]},{"hub":"تی هاب اردبیل","values":[15,"تی هاب اردبیل",10,null,null,null,null,10]},{"hub":"هاب بوشهر(تی هاب)","values":[16,"هاب بوشهر(تی هاب)",8,null,null,null,null,8]}],"summary":[]};
+let history;try{history=JSON.parse(localStorage.getItem('tihubKpiHistory2026')||'null')||[{period:'نمونه فایل ارسالی',data:INITIAL}]}catch(e){history=[{period:'نمونه فایل ارسالی',data:INITIAL}]}
+let active=-1;let compareBase=0,compareTarget=0,compareMetric='سرانه مرسوله',compareHub='';
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),num=x=>Number(x||0).toLocaleString('fa-IR',{maximumFractionDigits:2}),isnum=x=>typeof x==='number'&&Number.isFinite(x);
+function persist(){try{localStorage.setItem('tihubKpiHistory2026',JSON.stringify(history));return true}catch(e){$('status').textContent='فضای ذخیره مرورگر کافی نیست؛ پشتیبان JSON بگیرید.';return false}}
+history.forEach(p=>{if(p.period==='نمونه فایل ارسالی'&&!p.data.some(x=>x.name===DAMAGE_SHEET.name))p.data.push(DAMAGE_SHEET)});
+function periods(){let old=$('periodSelect').value;$('periodSelect').innerHTML=history.map((x,i)=>`<option value="${i}">${esc(x.period)}</option>`).join('');$('periodSelect').value=old||String(history.length-1)}
+function chosen(){return history[+$('periodSelect').value]?.data||INITIAL}
+function sheet(){return chosen()[active]}
+function updateNav(){let n=$('nav');n.innerHTML='<button data-i="-1">▦ نمای کلی مدیریت</button><button data-i="-2">🏆 تابلو عملکرد هاب‌ها</button><button data-i="-4">◈ رتبه‌بندی اهمیت استراتژیک هاب‌ها</button><button data-i="-3">▤ مقایسه دوره‌ها</button>'+chosen().map((x,i)=>`<button data-i="${i}">${esc(x.name)}</button>`).join('');n.querySelectorAll('button').forEach(b=>{b.classList.toggle('active',+b.dataset.i===active);b.onclick=()=>{active=+b.dataset.i;render()}})}
+function numericColumns(d){let rows=d.rows||[];return (d.headers||[]).map((h,i)=>({h,i,count:rows.filter(r=>isnum(r.values[i])).length})).filter(x=>x.i>1&&x.count>0&&x.h)}
+function render(){updateNav();let d=sheet();$('title').textContent=active===-4?'رتبه‌بندی اهمیت استراتژیک هاب‌ها':active===-3?'مقایسه عملکرد دوره‌ای هاب‌ها':active===-2?'تابلو عملکرد و رتبه‌بندی هاب‌های TIHUB':active<0?'داشبورد شاخص‌های کلیدی عملیات TIHUB':d.name+' | TIHUB';if(active===-4){renderStrategic();return}if(active===-2){renderRanking();return}if(active===-3){renderCompare();return}if(active<0){$('hubSelect').innerHTML='<option value="">همه هاب‌ها</option>';$('content').innerHTML='<section class="panel"><h2>انتخاب شاخص برای تصمیم مدیریتی</h2><div class="overview">'+chosen().map((x,i)=>`<button data-open="${i}"><b>${esc(x.name)}</b><p class="sub">${x.kind==='hub'?num(x.rows.length)+' هاب':'گزارش تجمیعی و متنی'}</p></button>`).join('')+'</div></section>';document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{active=+b.dataset.open;render()});return}
+if(!d){$('content').innerHTML='<div class="panel">شیت این شاخص در فایل انتخابی وجود ندارد.</div>';return}
+let hubs=[...new Set(d.rows.map(x=>x.hub))];let prev=$('hubSelect').value;$('hubSelect').innerHTML='<option value="">همه هاب‌ها</option>'+hubs.map(x=>`<option>${esc(x)}</option>`).join('');if(hubs.includes(prev))$('hubSelect').value=prev;
+let rows=d.rows.filter(r=>!$('hubSelect').value||r.hub===$('hubSelect').value);
+if(d.kind==='summary'&&d.segment){renderSegment(d);return}if(d.kind==='summary'){let summaries=d.summary.map(x=>`<div class="advice">${esc(x)}</div>`).join('');$('content').innerHTML=`<div class="panel"><h2>${esc(d.name)} — خلاصه منبع</h2>${summaries}<p class="note">این شیت ساختار جدول هاب‌محور ندارد؛ از ساختن رتبه‌بندی یا شاخص عددی غیرمستند خودداری شده است. برای تحلیل دقیق‌تر نیاز به استخراج بخش‌های عددی و تعاریف گزارش داریم.</p></div>`;return}
+let cols=numericColumns(d),main=(d.name==='مرسولات رسوبی هاب'?cols.find(x=>x.h==='مجموع رسوب در 6 ماه اول'):null)||cols.find(x=>/شاخص|درصد|نسبت|میانگین/.test(x.h))||cols.at(-1)||cols[0];
+let value=r=>isnum(r.values[main.i])?r.values[main.i]:0;
+const carrierUnload=d.name==='سرعت تخلیه حامل'||d.name==='سرعت بارگیری حامل'||d.name==='سرعت تخلیه مرسوله'||d.name==='سرعت بارگیری مرسوله';
+const carrierLoading=d.name==='سرعت بارگیری حامل';
+const parcelUnload=d.name==='سرعت تخلیه مرسوله'||d.name==='سرعت بارگیری مرسوله';
+const parcelLoading=d.name==='سرعت بارگیری مرسوله';
+const queueWait=d.name.trim()==='مدت انتظار صف';
+const cutoffErrors=d.name==='تعداد خطای کات آف';
+const timedReport=carrierUnload||queueWait||cutoffErrors;
+const isTimeColumn=i=>cutoffErrors?i===5:queueWait?(i===3||i===4):(i===2||i===4);
+// Excel stores times as fractions of a day. Match the workbook's cell number formats.
+const excelClock=(v,ms=false)=>{const sec=((Number(v)||0)*86400%86400+86400)%86400;const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),ss=Math.floor(sec%60),millis=Math.round((sec-Math.floor(sec))*1000);let t=h*3600000+m*60000+ss*1000+millis;t%=86400000;const pad=n=>String(n).padStart(2,'0');return pad(Math.floor(t/3600000))+':'+pad(Math.floor(t%3600000/60000))+':'+pad(Math.floor(t%60000/1000))+(ms?'.'+String(t%1000).padStart(3,'0'):'')};
+const carrierUnit=(v,i)=>cutoffErrors?(i===5?excelClock(v,false):num(v)):queueWait?(i===3||i===4?excelClock(v,i===4):num(v)):(i===2?excelClock(v,false):i===4?excelClock(v,parcelUnload):num(v));
+const carrierNumeric=(v,i)=>(isTimeColumn(i))?Number(v)*86400:Number(v);
+let isRate=/درصد|نرخ/.test(main.h);let display=v=>cutoffErrors&&main.i===5?excelClock(v):isRate?(v*100).toLocaleString('fa-IR',{minimumFractionDigits:2,maximumFractionDigits:6})+'٪':Number(v||0).toLocaleString('fa-IR',{maximumFractionDigits:3});
+let sorted=[...rows].sort((a,b)=>value(b)-value(a)),max=Math.max(1,...rows.map(value));
+let avg=rows.length?rows.reduce((a,r)=>a+value(r),0)/rows.length:0;
+let low=sorted.at(-1),high=sorted[0];
+let inverse=/خطا|رسوب|انتظار|اصلاح|مدت|زمان/.test(d.name);
+let risk=inverse?high:low;
+let metrics=[['هاب‌های دارای داده',num(rows.length)],['میانگین '+main.h,display(avg)],['بیشترین مقدار',high?display(value(high)):'—'],['کمترین مقدار',low?display(value(low)):'—']];
+if(cutoffErrors){const total=rows.reduce((a,r)=>a+(Number(r.values[2])||0),0),errors=rows.reduce((a,r)=>a+(Number(r.values[3])||0),0),timeRows=rows.filter(r=>isnum(r.values[5]));metrics=[['هاب‌های دارای داده',num(rows.length)],['تعداد خروج حامل',num(total)],['تعداد خطای کات آف',num(errors)],['نرخ خطای کات آف',total?(errors/total*100).toLocaleString('fa-IR',{maximumFractionDigits:2})+'٪':'—'],['بیشترین میانگین زمان خطا',timeRows.length?excelClock(Math.max(...timeRows.map(r=>r.values[5]))):'—']]}
+if(queueWait){const count=rows.reduce((a,r)=>a+(Number(r.values[2])||0),0),total=rows.reduce((a,r)=>a+(Number(r.values[3])||0),0);metrics=[['هاب‌های دارای داده',num(rows.length)],['تعداد حامل تخلیه',num(count)],['مجموع مدت انتظار',excelClock(total)],['میانگین مدت انتظار به ازای حامل',count?excelClock(total/count,true):'—']]}
+if(carrierUnload){const totalMin=rows.reduce((a,r)=>a+(Number(r.values[2])||0)*1440,0),totalCarriers=rows.reduce((a,r)=>a+(Number(r.values[3])||0),0);metrics=[['هاب‌های دارای داده',num(rows.length)],[carrierLoading?'مجموع زمان تخلیه (عنوان اکسل)':parcelLoading?'مجموع زمان بارگیری':'مجموع زمان تخلیه',excelClock(totalMin/1440)+' (نمایش اکسل)'],[parcelUnload?(parcelLoading?'تعداد مرسولات بارگیری':'تعداد مرسولات تخلیه'):'تعداد حامل ورودی',num(totalCarriers)],[parcelUnload?(parcelLoading?'مدت متوسط بارگیری هر مرسوله':'مدت متوسط تخلیه هر مرسوله'):carrierLoading?'مدت متوسط بارگیری هر حامل':'مدت متوسط تخلیه هر حامل',totalCarriers?excelClock(totalMin/totalCarriers/1440,parcelUnload):'—']]}
+if(d.name===DAMAGE_SHEET.name){const totals=rows.reduce((a,r)=>a+(Number(r.values[7])||0),0);metrics=[['هاب‌های گزارش‌شده',num(rows.length)],['مجموع موارد گزارش‌شده',num(totals)],['تاخیر در ارسال به مسیر',num(rows.reduce((a,r)=>a+(Number(r.values[2])||0),0))],['آسیب‌دیدگی ثبت‌شده',num(rows.reduce((a,r)=>a+(Number(r.values[3])||0),0))]];}
+let cards=metrics.map(([k,v])=>`<div class="metric"><small>${esc(k)}</small><b>${v}</b></div>`).join('');
+let chart=sorted.slice(0,24).map(r=>`<div class="bar" title="${esc(r.hub)}: ${display(value(r))}"><span>${esc(r.hub)}</span><div class="track"><div class="fill" style="width:${Math.max(0.3,value(r)/max*100)}%"></div></div><strong>${display(value(r))}</strong></div>`).join('');
+let headers=d.headers.map((h,i)=>h?`<th>${esc(h)}</th>`:'').join('');
+let tbl=rows.map(r=>'<tr>'+r.values.map((v,i)=>d.headers[i]?`<td>${timedReport&&isnum(v)&&isTimeColumn(i)?carrierUnit(v,i):isnum(v)?(/درصد|نرخ|نسبت مرسولات اصلاح/.test(d.headers[i])?(v*100).toLocaleString('fa-IR',{maximumFractionDigits:6})+'٪':num(v)):esc(v)}</td>`:'').join('')+'</tr>').join('');
+let action=inverse?'بررسی علت افزایش، تفکیک بر اساس شیفت/حامل/مبدأ و تعیین مالک اقدام اصلاحی':'بررسی شکاف عملکرد با استاندارد، ظرفیت و منابع و انتقال تجربه از هاب‌های بهتر';
+let caution=/سرعت|زمان|مدت|حامل/.test(d.name)?'واحد اندازه‌گیری زمان در فایل منبع باید تأیید شود؛ بدون آن مقایسه با SLA قطعی نیست.':'تفسیر بهتر یا بدتر بودن این شاخص باید با تعریف و استاندارد رسمی آن تأیید شود.';
+let chartPanels = (d.name==='سرانه مرسوله'||d.name==='اصلاح و بسته بندی'||d.name==='مرسولات رسوبی هاب'||d.name==='ثبت بیپ خروج'||d.name==='درصد تحقق بچینگ'||d.name==='میانگین مرسولات در بچ'||d.name===DAMAGE_SHEET.name||timedReport) ? cols.map(c=>{
+ const valid=rows.filter(r=>isnum(r.values[c.i]));
+ const maxC=Math.max(0,...valid.map(r=>timedReport?carrierNumeric(r.values[c.i],c.i):r.values[c.i]));
+ const minC=Math.min(0,...valid.map(r=>timedReport?carrierNumeric(r.values[c.i],c.i):r.values[c.i]));
+ const span=Math.max(1e-12,maxC-minC);
+ const chartRows=[...valid].sort((a,b)=>b.values[c.i]-a.values[c.i]).map(r=>{
+ const v=timedReport?carrierNumeric(r.values[c.i],c.i):r.values[c.i],pct=/درصد|نسبت/.test(c.h),label=timedReport?carrierUnit(r.values[c.i],c.i):pct?(v*100).toLocaleString('fa-IR',{maximumFractionDigits:3})+'٪':num(v);
+ return `<div class="bar" title="${esc(r.hub)}: ${label}"><span>${esc(r.hub)}</span><div class="track"><div class="fill" style="width:${Math.max(0.4,(v-minC)/span*100)}%"></div></div><strong>${label}</strong></div>`;
+ }).join('');
+ return `<section class="panel"><h2>${esc(c.h)}${(isTimeColumn(c.i))?((!cutoffErrors&&(parcelUnload&&c.i===4||queueWait&&c.i===4))?' (ساعت:دقیقه:ثانیه.میلی‌ثانیه)':' (ساعت:دقیقه:ثانیه)'):''}</h2>${chartRows||'داده عددی موجود نیست'}<p class="note">نمودار مستقل برای این ستون؛ مقیاس بر اساس دامنه مقادیر همین ستون است.</p></section>`;
+ }).join('') : `<section class="panel"><h2>مقایسه هاب‌ها — ${esc(main.h)}</h2>${chart||'داده هاب‌محور موجود نیست'}<p class="note">نوارها نسبت به بیشترین مقدار همین شاخص مقیاس‌بندی شده‌اند.</p></section>`;
+$('content').innerHTML=`<div class="metrics">${cards}</div><div class="${(d.name==='سرانه مرسوله'||d.name==='اصلاح و بسته بندی'||d.name==='مرسولات رسوبی هاب'||d.name==='ثبت بیپ خروج'||d.name==='درصد تحقق بچینگ'||d.name==='میانگین مرسولات در بچ'||d.name===DAMAGE_SHEET.name||timedReport)?'chart-grid':''}">${chartPanels}</div><section class="panel"><h2>جزئیات واقعی شیت ${esc(d.name)}</h2>${d.name===DAMAGE_SHEET.name?'<p class="note">داده‌های این بخش از تصویر ارسالی وارد شده‌اند. خانه‌های خالی در منبع به معنی «ثبت‌نشده/نامشخص» هستند، نه لزوماً صفر. عنوان گزارش شامل آسیب‌دیدگی است، اما بیشترین موارد تصویر مربوط به تأخیر در ارسال بسته به مسیر است.</p>':''}<div class="scroll"><table><thead><tr>${headers}</tr></thead><tbody>${tbl}</tbody></table></div></section>`;
+}
+
+function renderSegment(d){
+ const raw=d.segment||[], head=raw.findIndex(r=>String(r[0]||'').trim()==='عناوین');
+ if(head<0){$('content').innerHTML='<section class="panel">جدول سگمنت‌های این گزارش شناسایی نشد.</section>';return}
+ const segments=raw[head].slice(1,6).map(x=>String(x??''));
+ const table=raw.slice(head+1).filter(r=>String(r[0]??'').trim()).map(r=>({label:String(r[0]),values:r.slice(1,6)}));
+ const parseTime=x=>{if(typeof x==='number')return x*86400;const m=String(x??'').match(/^(\d+):(\d{1,2}):(\d{1,2})(?:\.(\d+))?$/);return m?Number(m[1])*3600+Number(m[2])*60+Number(m[3])+Number('0.'+(m[4]||'0')):NaN};
+ const formatTime=x=>{const t=Math.max(0,Number(x)||0),whole=Math.floor(t),ms=Math.round((t-whole)*1000),pad=n=>String(n).padStart(2,'0');return pad(Math.floor(t/3600))+':'+pad(Math.floor(t%3600/60))+':'+pad(whole%60)+'.'+String(ms).padStart(3,'0')};
+ const isTime=label=>/زمان|مدت|TIME/i.test(label)&&!/درصد|نرخ/.test(label);
+ const isPercent=label=>/درصد|نرخ|عدم رعایت Operation_Time/i.test(label)&&!isTime(label);
+ const panels=table.map(row=>{
+  const time=isTime(row.label),pct=isPercent(row.label);
+  const items=row.values.map((v,i)=>({name:segments[i],raw:v,v:time?parseTime(v):Number(v)})).filter(x=>Number.isFinite(x.v));
+  const mx=Math.max(0,...items.map(x=>x.v));
+  const bars=items.map((x,i)=>{
+   const label=time?formatTime(x.v):pct?(x.v*100).toLocaleString('fa-IR',{maximumFractionDigits:3})+'٪':num(x.v);
+   return `<div class="bar" title="${esc(x.name)}: ${esc(label)}"><span>${esc(x.name)}</span><div class="track"><div class="fill" style="width:${mx?Math.max(.5,x.v/mx*100):0}%${i===4?';background:#738899':''}"></div></div><strong>${esc(label)}</strong></div>`;
+  }).join('');
+  return `<section class="panel"><h2>${esc(row.label)}${time?' (ساعت:دقیقه:ثانیه.میلی‌ثانیه)':''}</h2>${bars||'<p>داده قابل نمایش وجود ندارد.</p>'}<p class="note">چهار سگمنت عملیاتی و مقدار مجموع/میانگین مطابق اکسل؛ مقیاس مخصوص همین شاخص است.</p></section>`;
+ }).join('');
+ const tableHtml=table.map(r=>`<tr><td>${esc(r.label)}</td>${r.values.map(v=>{let label=isTime(r.label)?(Number.isFinite(parseTime(v))?formatTime(parseTime(v)):String(v??'—')):isPercent(r.label)&&typeof v==='number'?(v*100).toLocaleString('fa-IR',{maximumFractionDigits:3})+'٪':v??'—';return `<td>${esc(label)}</td>`}).join('')}</tr>`).join('');
+ $('content').innerHTML=`<section class="panel"><h2>${esc(d.name)} | مقایسه شاخص‌ها در چهار سگمنت عملیاتی</h2><p class="note">داده‌ها بر اساس سگمنت هستند و هاب‌محور نیستند. ستون «مجموع/میانگین» نیز جداگانه مطابق اکسل نمایش داده شده است.</p></section><div class="chart-grid">${panels}</div><section class="panel"><h2>جدول کامل شاخص‌ها</h2><div class="scroll"><table><thead><tr><th>شاخص</th>${segments.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${tableHtml}</tbody></table></div></section>`;
+}
+
+// فقط این ۱۲ شاخص در رتبه‌بندی نهایی استفاده می‌شوند؛ گزارش آسیب‌دیدگی صرفاً نمایشی است.
+const RANK_RULES=[
+ ['سرانه مرسوله',5,'high',10],['سرعت تخلیه حامل',4,'low',8],
+ ['سرعت بارگیری حامل',4,'low',8],['سرعت تخلیه مرسوله',4,'low',8],
+ ['سرعت بارگیری مرسوله',4,'low',8],['اصلاح و بسته بندی',4,'low',9],
+ ['مدت انتظار صف ',4,'low',9],['مرسولات رسوبی هاب',3,'low',12],
+ ['ثبت بیپ خروج',4,'low',10],['درصد تحقق بچینگ',4,'high',10],
+ ['میانگین مرسولات در بچ',4,'high',4],['تعداد خطای کات آف',4,'low',4]
+];
+function openRankingGuide(){
+ const total=RANK_RULES.reduce((sum,r)=>sum+r[3],0);
+ const names=RANK_RULES.map(([name,col,dir,w])=>`<tr><td>${esc(name)}</td><td>${dir==='high'?'بیشتر بهتر':'کمتر بهتر'}</td><td>${num(w)}</td></tr>`).join('');
+ let modal=$('rankingCalcOverlay');if(!modal){modal=document.createElement('div');modal.id='rankingCalcOverlay';modal.className='calc-overlay';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');document.body.appendChild(modal)}
+ modal.innerHTML=`<div class="calc-dialog"><button class="calc-close" type="button" onclick="closeRankingGuide()">بستن ×</button><h2>راهنمای محاسبه رتبه‌بندی هاب‌ها</h2><p>این رتبه‌بندی از مقایسه نسبی هاب‌ها در ۱۲ شاخص و وزن‌دهی به امتیاز آن‌ها ساخته می‌شود. شاخص «آسیب دیدگی مرسولات ناشی از تخلیه و بارگیری» در رتبه‌بندی لحاظ نمی‌شود. رتبه اول در هر شاخص امتیاز ۱۰۰ و رتبه آخر امتیاز صفر می‌گیرد.</p><h3>۱. محاسبه رتبه و امتیاز هر شاخص</h3><p>در شاخص‌های «بیشتر بهتر»، بیشترین مقدار رتبه اول می‌شود؛ در شاخص‌های «کمتر بهتر»، کمترین مقدار رتبه اول می‌شود.</p><div class="calc-formula">Score = 100 × (1 − (Rank − 1) / (N − 1))</div><p><b>Rank</b>: رتبه هاب در شاخص؛ <b>N</b>: تعداد هاب‌های دارای مقدار معتبر. اگر فقط یک هاب داده معتبر داشته باشد، امتیاز آن ۵۰ است.</p><p>مثال: در بین ۱۱ هاب، رتبه سوم امتیاز ۸۰ می‌گیرد: ۱۰۰ × (۱ − ۲ ÷ ۱۰) = ۸۰.</p><h3>۲. فرمول امتیاز نهایی هاب</h3><div class="calc-formula">Final Score = Σ (Scoreᵢ × Weightᵢ) / Σ (Available Weightᵢ)</div><p>فقط شاخص‌هایی که برای همان هاب مقدار معتبر دارند در صورت و مخرج لحاظ می‌شوند. مثال: (۸۰×۱۲ + ۶۰×۱۰ + ۹۰×۱۰) ÷ (۱۲+۱۰+۱۰) = ۷۶٫۸۸ از ۱۰۰.</p><h3>۳. درصد پوشش داده</h3><div class="calc-formula">Coverage (%) = 100 × Σ (Available Weightᵢ) / Σ (Usable Weightᵢ)</div><p>وزن قابل استفاده مجموع وزن شاخص‌هایی است که در دوره انتخاب‌شده دست‌کم برای یک هاب داده معتبر دارند.</p><h3>۴. وزن‌ها و جهت شاخص‌ها</h3><table><thead><tr><th>شاخص</th><th>جهت مطلوب</th><th>وزن</th></tr></thead><tbody>${names}<tr><th colspan="2">جمع وزن‌ها</th><th>${num(total)}</th></tr></tbody></table><p class="note">این امتیاز نسبی است و نشان‌دهنده تحقق استاندارد رسمی نیست. در نسخه فعلی، برای مقادیر مساوی رتبه مشترک در نظر گرفته نمی‌شود و ترتیب ردیف‌ها ممکن است بر امتیاز اثر بگذارد. وزن‌ها پیشنهادی‌اند و پیش از ارزیابی رسمی نیاز به تأیید دارند.</p></div>`;
+ modal.classList.add('show');modal.onclick=e=>{if(e.target===modal)closeRankingGuide()};
+}
+function closeRankingGuide(){let modal=$('rankingCalcOverlay');if(modal)modal.classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRankingGuide()});
+function hubKey(s){return String(s).replace(/^(هاب|تی هاب)\s*/,'').replace(/\(تی هاب\)/g,'').replace(/[ي]/g,'ی').replace(/[ك]/g,'ک').replace(/\s+/g,' ').trim()}
+function renderRanking(){
+ let all=chosen(),hubs=new Map(),used=[];
+ for(let [name,col,dir,weight] of RANK_RULES){
+  let d=all.find(x=>x.name.trim()===name.trim());if(!d||!d.rows?.length)continue;
+  let valid=d.rows.filter(x=>isnum(x.values[col]));if(!valid.length)continue;
+  let ordered=[...valid].sort((a,b)=>dir==='high'?b.values[col]-a.values[col]:a.values[col]-b.values[col]);
+  let rankMap=new Map(ordered.map((r,i)=>[hubKey(r.hub),i]));
+  used.push({name,weight,dir,col});
+  for(let r of valid){let key=hubKey(r.hub),o=hubs.get(key)||{hub:r.hub,s:0,w:0,metrics:[]};
+   let rank=rankMap.get(key),score=valid.length===1?50:100*(1-rank/(valid.length-1));
+   o.s+=score*weight;o.w+=weight;o.metrics.push({name,score,raw:r.values[col]});hubs.set(key,o);
+  }
+ }
+ let ranked=[...hubs.values()].map(x=>({...x,score:x.w?x.s/x.w:0,coverage:x.w/used.reduce((a,b)=>a+b.weight,0)*100})).sort((a,b)=>b.score-a.score);
+ let cards=ranked.slice(0,3).map((r,i)=>`<div class="metric"><small>رتبه ${num(i+1)} — ${esc(r.hub)}</small><b>${num(r.score)} / ۱۰۰</b><small>پوشش وزنی داده: ${num(r.coverage)}٪</small></div>`).join('');
+ let rows=ranked.map((r,i)=>`<tr><td><b>${num(i+1)}</b></td><td>${esc(r.hub)}</td><td><b>${num(r.score)}</b></td><td>${num(r.coverage)}٪</td><td>${r.metrics.length}</td><td>${r.score<40?'اقدام اصلاحی فوری':r.score<70?'پایش و بهبود':'حفظ و الگوبرداری'}</td></tr>`).join('');
+ let bars=ranked.map(r=>`<div class="bar"><span>${esc(r.hub)}</span><div class="track"><div class="fill" style="width:${r.score}%;background:${r.score<40?'#dc7868':r.score<70?'#efa43d':'#00a688'}"></div></div><b>${num(r.score)}</b></div>`).join('');
+ $('hubSelect').innerHTML='<option value="">همه هاب‌ها</option>';
+ $('content').innerHTML=`<section class="panel"><h2>تابلو نهایی عملکرد هاب‌ها | رتبه‌بندی ترکیبی</h2><p class="note">امتیاز آزمایشی تصمیم‌یار بر مبنای رتبه نسبی هاب‌ها در هر شاخص: بهترین = ۱۰۰ و ضعیف‌ترین = ۰. امتیاز نهایی = مجموع (امتیاز شاخص × وزن) ÷ مجموع وزن شاخص‌های موجود برای همان هاب. گزارش «آسیب دیدگی مرسولات ناشی از تخلیه و بارگیری» صرفاً جهت پایش است و در امتیاز و رتبه نهایی هیچ تأثیری ندارد. این رتبه‌بندی «مقایسه نسبی» است، نه میزان تحقق استاندارد رسمی یا کیفیت قطعی هاب.</p><div class="metrics">${cards}</div><button class="calc-btn" type="button" onclick="openRankingGuide()">ⓘ نحوه محاسبه رتبه‌بندی و فرمول‌ها</button></section><section class="panel"><h2>رتبه‌بندی کل هاب‌ها</h2>${bars}</section><section class="panel"><h2>جدول رتبه‌بندی و پوشش اطلاعات</h2><div class="scroll"><table><thead><tr><th>رتبه</th><th>هاب</th><th>امتیاز</th><th>پوشش وزنی</th><th>تعداد شاخص</th><th>اقدام پیشنهادی</th></tr></thead><tbody>${rows}</tbody></table></div><p class="note">وزن‌های پیشنهادی: رسوب ۱۲، سرانه ۱۰، بیپ خروج ۱۰، بچینگ ۱۰، اصلاح ۹، انتظار صف ۹، هر شاخص سرعت ۸، میانگین بچ ۴، خطای کات‌آف ۴. جمع وزن ۱۰۰ است. قبل از استفاده در ارزیابی رسمی، وزن‌ها و تعریف شاخص‌ها باید تأیید شوند.</p></section>`;
+}
+
+// داده‌های ساختاری ثابت از اسلاید ۱۰ ارائه «رتبه‌بندی هاب‌ها»، اسفند ۱۴۰۳.
+const STRATEGIC_DATA=[
+ ['تهران',2728936,12,119,23],['شرق تهران',745587,12,32,15],['اصفهان',605159,12,35,10],
+ ['مشهد',572121,6,28,14],['کرج',504528,10,38,4],['شیراز',453825,10,24,13],
+ ['همدان',439854,9,8,16],['تبریز',352603,6,22,36],['رشت',328634,6,28,15],
+ ['اهواز',323536,6,26,26],['کرمان',290744,5,14,9],['بندرعباس',157821,4,23,5],['بوشهر',111624,4,11,6]
+];
+const STRATEGIC_WEIGHTS=[.614,.243,.143];
+function strategicRows(){
+ const raw=STRATEGIC_DATA.map(([name,parcel,corridor,agents,routes])=>({name,parcel,corridor,agents,routes,network:agents+routes}));
+ const keys=['parcel','corridor','network'];
+ const limits=keys.map(k=>[Math.min(...raw.map(x=>x[k])),Math.max(...raw.map(x=>x[k]))]);
+ return raw.map(r=>{let norms=keys.map((k,i)=>{let [lo,hi]=limits[i];return hi===lo?1:(r[k]-lo)/(hi-lo)});
+ let contributions=norms.map((v,i)=>v*STRATEGIC_WEIGHTS[i]);return {...r,norms,contributions,score:contributions.reduce((a,b)=>a+b,0)};
+ }).sort((a,b)=>b.score-a.score);
+}
+function openStrategicGuide(){
+ let modal=$('rankingCalcOverlay');if(!modal){modal=document.createElement('div');modal.id='rankingCalcOverlay';modal.className='calc-overlay';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');document.body.appendChild(modal)}
+ modal.innerHTML=`<div class="calc-dialog"><button class="calc-close" type="button" onclick="closeRankingGuide()">بستن ×</button>
+ <h2>راهنمای محاسبه اهمیت استراتژیک هاب‌ها</h2><p>مبنای اطلاعات: جدول اسفند ۱۴۰۳ در اسلاید ۱۰ پاورپوینت «رتبه‌بندی هاب‌ها». وزن‌ها مطابق اسلایدهای ۸ و ۱۲ و پس از پالایش نظرات خبرگان هستند. این امتیاز، <b>اهمیت ساختاری هاب</b> را اندازه می‌گیرد و معیار کیفیت عملکرد روزانه نیست.</p>
+ <h3>۱. نرمال‌سازی Min-Max برای هر شاخص</h3><div class="calc-formula" dir="ltr">Normalized(x) = (x − MIN) / (MAX − MIN)</div><p>حداقل و حداکثر در بین همین ۱۳ هاب و بر اساس داده اسفند ۱۴۰۳ محاسبه می‌شود. بالاترین مقدار نمره ۱ و پایین‌ترین مقدار نمره ۰ می‌گیرد. در صورت یکسان بودن همه مقادیر یک شاخص، نمره آن شاخص برای همه هاب‌ها ۱ منظور می‌شود.</p>
+ <h3>۲. شاخص‌ها و وزن‌های مصوب ارائه</h3><table><thead><tr><th>شاخص</th><th>وزن</th><th>جهت مطلوب برای اهمیت</th></tr></thead><tbody><tr><td>تعداد مرسولات</td><td>۶۱٫۴٪</td><td>بیشتر = اهمیت ساختاری بالاتر</td></tr><tr><td>تعداد کریدورها</td><td>۲۴٫۳٪</td><td>بیشتر = اهمیت ساختاری بالاتر</td></tr><tr><td>مجموع روت و نمایندگی</td><td>۱۴٫۳٪</td><td>بیشتر = اهمیت ساختاری بالاتر</td></tr></tbody></table>
+ <h3>۳. فرمول نهایی</h3><div class="calc-formula" dir="ltr">S = 0.614 × P + 0.243 × C + 0.143 × R</div><p>P: تعداد مرسولات نرمال‌شده؛ C: کریدور نرمال‌شده؛ R: مجموع روت و نمایندگی نرمال‌شده. امتیاز S بین صفر تا یک است؛ برای نمایش از ۱۰۰ نیز در آن ضرب می‌شود.</p>
+ <h3>۴. نمونه محاسبه برای شرق تهران</h3><p>مرسولات: ۷۴۵٬۵۸۷؛ کریدور: ۱۲؛ مجموع روت و نمایندگی: ۴۷.</p><div class="calc-formula" dir="ltr">P=(745587−111624)/(2728936−111624)≈0.2422<br>C=(12−4)/(12−4)=1<br>R=(47−17)/(142−17)=0.24<br>S≈0.614×0.2422 + 0.243×1 + 0.143×0.24 ≈ 0.426</div>
+ <p class="note">برای حفظ قابلیت مقایسه تاریخی، اعداد ساختاری این مدل ثابت و مربوط به اسفند ۱۴۰۳ هستند. بارگذاری اکسل‌های دوره‌ای عملکرد، به‌صورت خودکار این رتبه‌بندی استراتژیک را تغییر نمی‌دهد. «آسیب‌دیدگی مرسولات» نیز در هیچ‌کدام از فرمول‌های این بخش وارد نشده است.</p></div>`;
+ modal.classList.add('show');modal.onclick=e=>{if(e.target===modal)closeRankingGuide()};
+}
+function renderStrategic(){
+ $('hubSelect').innerHTML='<option value="">همه هاب‌ها</option>';
+ const data=strategicRows(),nf=v=>Number(v).toLocaleString('fa-IR',{maximumFractionDigits:3}),pct=v=>Number(v*100).toLocaleString('fa-IR',{maximumFractionDigits:2});
+ const cards=data.slice(0,3).map((r,i)=>`<div class="metric"><small>رتبه ${nf(i+1)} | ${esc(r.name)}</small><b>${pct(r.score)} از ۱۰۰</b><small>اهمیت ساختاری ـ اسفند ۱۴۰۳</small></div>`).join('');
+ const bars=data.map(r=>`<div class="bar"><span>${esc(r.name)}</span><div class="track"><div class="fill" style="width:${Math.max(0,r.score*100)}%;background:#009d82"></div></div><strong>${pct(r.score)}</strong></div>`).join('');
+ const rows=data.map((r,i)=>`<tr><td>${nf(i+1)}</td><td><b>${esc(r.name)}</b></td><td>${nf(r.parcel)}</td><td>${nf(r.corridor)}</td><td>${nf(r.agents)}</td><td>${nf(r.routes)}</td><td>${nf(r.network)}</td><td>${pct(r.norms[0])}</td><td>${pct(r.norms[1])}</td><td>${pct(r.norms[2])}</td><td><b>${pct(r.score)}</b></td></tr>`).join('');
+ const operMap=new Map();for(let r of RANK_RULES){let [name,col,dir,w]=r,d=chosen().find(x=>x.name.trim()===name.trim());if(!d)continue;let valid=(d.rows||[]).filter(x=>isnum(x.values[col]));let ordered=[...valid].sort((a,b)=>dir==='high'?b.values[col]-a.values[col]:a.values[col]-b.values[col]);ordered.forEach((x,i)=>{let key=hubKey(x.hub),v=operMap.get(key)||{sum:0,w:0};v.sum+=(ordered.length===1?50:100*(1-i/(ordered.length-1)))*w;v.w+=w;operMap.set(key,v)})}
+ const opSorted=[...operMap.entries()].map(([name,v])=>({name,score:v.sum/v.w})).sort((a,b)=>b.score-a.score),opRank=new Map(opSorted.map((x,i)=>[x.name,{rank:i+1,score:x.score}]));
+ const cross=data.map((r,i)=>{let op=opRank.get(hubKey('هاب '+r.name));return {...r,strategicRank:i+1,operational:op}});
+ const crossRows=cross.map(r=>`<tr><td>${esc(r.name)}</td><td>${nf(r.strategicRank)}</td><td>${r.operational?nf(r.operational.rank):'—'}</td><td>${r.operational?nf(r.operational.score):'—'}</td><td>${!r.operational?'داده عملکردی قابل تطبیق موجود نیست':r.strategicRank<=5&&r.operational.rank>Math.ceil(opSorted.length/2)?'<b style="color:#ba493d">اهمیت بالا / نیازمند بررسی عملکرد</b>':r.strategicRank<=5?'اهمیت بالا / پایش مستمر':'پایش متناسب با اهمیت'}</td></tr>`).join('');
+ $('content').innerHTML=`<section class="panel"><h2>رتبه‌بندی اهمیت استراتژیک هاب‌ها | اسفند ۱۴۰۳</h2><p class="note">مدل مستقل از «تابلو عملکرد هاب‌ها»؛ مبتنی بر حجم مرسولات (۶۱٫۴٪)، کریدورها (۲۴٫۳٪)، مجموع روت و نمایندگی (۱۴٫۳٪). اعداد از پاورپوینت مدل‌سازی اهمیت استراتژیک استخراج شده‌اند و با تغییر دوره عملیاتی تغییر نمی‌کنند. <b>هیچ تغییری در امتیاز ۱۲ شاخص عملیاتی ایجاد نمی‌شود.</b></p><div class="metrics">${cards}</div><button class="calc-btn" type="button" onclick="openStrategicGuide()">ⓘ راهنمای فرمول، وزن‌ها و مثال محاسبه</button></section>
+ <section class="panel"><h2>نمودار رتبه‌بندی اهمیت استراتژیک</h2>${bars}</section>
+ <section class="panel"><h2>داده‌های مبنا و امتیازهای نرمال‌شده</h2><div class="scroll"><table><thead><tr><th>رتبه</th><th>هاب</th><th>مرسولات</th><th>کریدور</th><th>نمایندگی</th><th>روت</th><th>مجموع شبکه</th><th>نمره مرسولات ٪</th><th>نمره کریدور ٪</th><th>نمره شبکه ٪</th><th>امتیاز نهایی /۱۰۰</th></tr></thead><tbody>${rows}</tbody></table></div></section>
+ <section class="panel"><h2>مقایسه اهمیت استراتژیک با عملکرد عملیاتی دوره انتخابی</h2><p class="note">رتبه اهمیت بر اساس اسفند ۱۴۰۳ ثابت است؛ رتبه عملکرد از گزارش عملیاتی دوره انتخاب‌شده محاسبه می‌شود. این دو امتیاز با یکدیگر جمع یا میانگین گرفته نمی‌شوند. ردیف‌های فاقد داده عملیاتی با «—» مشخص شده‌اند.</p><div class="scroll"><table><thead><tr><th>هاب</th><th>رتبه اهمیت</th><th>رتبه عملکرد</th><th>امتیاز عملکرد /۱۰۰</th><th>وضعیت مدیریتی</th></tr></thead><tbody>${crossRows}</tbody></table></div></section>`;
+}
+function parseWorkbook(wb){return wb.SheetNames.map(name=>{let raw=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:null,raw:true});let idx=raw.findIndex(r=>r.some(c=>String(c||'').trim()==='نام هاب'));if(idx>=0){let headers=raw[idx].map(x=>String(x||'').trim());let hi=headers.indexOf('نام هاب');let rows=raw.slice(idx+1).filter(r=>String(r[hi]||'').trim().startsWith('هاب ')).map(r=>({hub:String(r[hi]).trim(),values:r}));return {name,kind:'hub',headers,rows,summary:[]}}return{name,kind:'summary',segment:raw,headers:[],rows:[],summary:raw.slice(0,28).map(r=>r.filter(x=>x!==null&&x!=='').join(' | ')).filter(Boolean)}})}
+// Period comparison keeps each imported workbook as a distinct snapshot; no merging or summing across snapshots.
+function metricOptions(d){return numericColumns(d).filter(c=>c.h&&!/^ردیف$/.test(c.h))}
+function metricFormat(v,h){if(!isnum(v))return '—';if(/زمان|مدت|دقیقه/.test(h)&&!/تعداد/.test(h)){const sec=((v*86400)%86400+86400)%86400;const t=Math.round(sec),pad=n=>String(n).padStart(2,'0');return `${Math.floor(t/3600)}:${pad(Math.floor(t%3600/60))}:${pad(t%60)}`;}if(/درصد|نرخ/.test(h))return (v*100).toLocaleString('fa-IR',{maximumFractionDigits:4})+'٪';return v.toLocaleString('fa-IR',{maximumFractionDigits:3})}
+function compareSeries(d,name,head){if(!d||d.kind!=='hub')return new Map();const index=d.headers.findIndex(h=>String(h).trim()===String(head).trim());if(index<0)return new Map();return new Map((d.rows||[]).filter(r=>isnum(r.values[index])).map(r=>[hubKey(r.hub),{name:r.hub,value:r.values[index]}]))}
+function renderCompare(){
+ const pCount=history.length;compareBase=Math.min(compareBase,pCount-1);compareTarget=Math.min(compareTarget,pCount-1);
+ if(pCount>1&&compareBase===compareTarget){compareBase=pCount-2;compareTarget=pCount-1}
+ const allNames=[...new Set(history.flatMap(p=>(p.data||[]).filter(d=>d.kind==='hub').map(d=>d.name)))];if(!allNames.includes(compareMetric))compareMetric=allNames[0]||'';
+ const baseData=history[compareBase]?.data||[],targetData=history[compareTarget]?.data||[];
+ const a=baseData.find(d=>d.name===compareMetric),b=targetData.find(d=>d.name===compareMetric);
+ const colsA=a?metricOptions(a):[],colsB=b?metricOptions(b):[];
+ const headers=[...new Set([...colsA.map(c=>c.h),...colsB.map(c=>c.h)])];
+ const options=(selected)=>history.map((p,i)=>`<option value="${i}" ${i===selected?'selected':''}>${esc(p.period)}</option>`).join('');
+ const optMetric=allNames.map(n=>`<option ${n===compareMetric?'selected':''}>${esc(n)}</option>`).join('');
+ const firstMap=compareSeries(a,compareMetric,headers[0]),secondMap=compareSeries(b,compareMetric,headers[0]);
+ const hubs=[...new Set([...(a?.rows||[]).map(r=>hubKey(r.hub)),...(b?.rows||[]).map(r=>hubKey(r.hub))])].sort((x,y)=>x.localeCompare(y,'fa'));
+ if(compareHub&&!hubs.includes(compareHub))compareHub='';
+ const hubOptions='<option value="">تمام هاب‌ها</option>'+hubs.map(h=>`<option value="${esc(h)}" ${compareHub===h?'selected':''}>${esc(h)}</option>`).join('');
+ let sections='';
+ for(const head of headers){
+  const ma=compareSeries(a,compareMetric,head),mb=compareSeries(b,compareMetric,head);
+  const keys=compareHub?[compareHub]:hubs;
+  const lines=keys.map(h=>{const av=ma.get(h)?.value,bv=mb.get(h)?.value,valid=isnum(av)&&isnum(bv);const diff=valid?bv-av:null,percent=valid&&av!==0?diff/Math.abs(av)*100:null;const fmtDelta=diff===null?'—':(diff>0?'+':'')+metricFormat(diff,head);const fmtPct=percent===null?'—':(percent>0?'+':'')+percent.toLocaleString('fa-IR',{maximumFractionDigits:2})+'٪';return `<tr><td>${esc(mb.get(h)?.name||ma.get(h)?.name||h)}</td><td>${metricFormat(av,head)}</td><td>${metricFormat(bv,head)}</td><td>${fmtDelta}</td><td>${fmtPct}</td></tr>`}).join('');
+  const pairs=keys.map(h=>({h,av:ma.get(h)?.value,bv:mb.get(h)?.value})).filter(x=>isnum(x.av)||isnum(x.bv));const max=Math.max(0,...pairs.flatMap(x=>[x.av||0,x.bv||0]));
+  const bars=pairs.slice(0,18).map(x=>`<div style="margin:10px 0;border-bottom:1px solid #eef1f2;padding-bottom:7px"><b>${esc(x.h)}</b><div class="bar"><span>مبنا</span><div class="track"><div class="fill" style="width:${max&&isnum(x.av)?x.av/max*100:0}%;background:#9eafb8"></div></div><strong>${metricFormat(x.av,head)}</strong></div><div class="bar"><span>مقایسه</span><div class="track"><div class="fill" style="width:${max&&isnum(x.bv)?x.bv/max*100:0}%;background:#087f81"></div></div><strong>${metricFormat(x.bv,head)}</strong></div></div>`).join('');
+  sections+=`<section class="panel"><h2>${esc(head)}</h2><div class="compare-chart">${bars||'<p>داده مشترک برای نمودار موجود نیست.</p>'}</div><div class="compare-table"><table><thead><tr><th>هاب</th><th>دوره مبنا</th><th>دوره مقایسه</th><th>تغییر مطلق</th><th>تغییر درصدی</th></tr></thead><tbody>${lines}</tbody></table></div></section>`;
+ }
+ $('hubSelect').innerHTML='<option value="">همه هاب‌ها</option>';
+ $('content').innerHTML=`<section class="panel"><h2>مقایسه دو دوره ثبت‌شده</h2><p class="note">هر اکسل یک نسخه مستقل است و گزارش قبلی حذف یا با گزارش جدید جمع نمی‌شود. مقایسه فقط بین ستون‌های هم‌نام و هاب‌های متناظر انجام می‌شود.</p><div class="compare-controls"><label>دوره مبنا<select id="compareBase">${options(compareBase)}</select></label><label>دوره مقایسه<select id="compareTarget">${options(compareTarget)}</select></label><label>شاخص عملیاتی<select id="compareMetric">${optMetric}</select></label><label>هاب<select id="compareHub">${hubOptions}</select></label></div><p class="compare-note">توجه: برای مقایسه معتبر، هر دو فایل باید مربوط به بازه زمانی هم‌طول و با تعریف شاخص یکسان باشند؛ شاخص‌های تجمیعی شش‌ماهه را نباید مستقیماً با گزارش یک‌روزه مقایسه کرد. درصد تغییر فقط وقتی مقدار دوره مبنا صفر نباشد محاسبه می‌شود. مثبت یا منفی بودن تغییر لزوماً به معنی بهبود یا افت نیست.</p><p class="note">${pCount===1?'در حال حاضر فقط یک دوره موجود است. فایل دوره بعد را از قسمت ورود گزارش جدید اضافه کنید.':''}</p></section>${sections||'<section class="panel">برای این شاخص داده عددی هاب‌محور یافت نشد.</section>'}`;
+ $('compareBase').onchange=e=>{compareBase=+e.target.value;renderCompare()};$('compareTarget').onchange=e=>{compareTarget=+e.target.value;renderCompare()};$('compareMetric').onchange=e=>{compareMetric=e.target.value;compareHub='';renderCompare()};$('compareHub').onchange=e=>{compareHub=e.target.value;renderCompare()};
+}
+
+$('import').onclick=async()=>{if(!window.TIHUB_CLOUD?.save){alert('ابتدا وارد حساب شوید و اتصال به پایگاه داده برقرار شود.');return}await window.TIHUB_CLOUD.save()};
+$('showCompare').onclick=()=>{compareTarget=history.length-1;compareBase=Math.max(0,history.length-2);active=-3;render()};
+$('restore').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let restored=JSON.parse(await f.text());if(!Array.isArray(restored)||!restored.length||!restored.every(x=>typeof x.period==='string'&&Array.isArray(x.data)))throw Error('ساختار پشتیبان معتبر نیست');if(!confirm('بازیابی پشتیبان، دوره‌های فعلی این مرورگر را جایگزین می‌کند. ادامه می‌دهید؟'))return;history=restored;persist();periods();$('periodSelect').value=String(history.length-1);active=-1;render();$('status').textContent=`${history.length} دوره از پشتیبان بازیابی شد.`}catch(err){alert('خطا در بازیابی: '+err.message)}e.target.value=''};
+$('backup').onclick=()=>{let blob=new Blob([JSON.stringify(history)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TIHUB_KPI_backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000)};
+$('periodSelect').onchange=()=>{active=-1;render()};$('hubSelect').onchange=render;periods();if(!localStorage.getItem('tihubKpiHistory2026'))persist();render();
+</script><script>
+/* Authentication and role check. The KPI snapshot is still bundled in this HTML.
+   Do not publish this file as a public website until embedded data is removed. */
+(async function(){
+ const msg=document.getElementById('tihub-auth-error');
+ const form=document.getElementById('tihub-login-form');
+ const button=document.getElementById('tihub-login-button');
+ const config=window.TIHUB_CONFIG||{};
+ const fail=t=>{msg.textContent=t;document.body.classList.remove('tihub-authenticated')};
+ if(!config.SUPABASE_URL||!config.SUPABASE_PUBLISHABLE_KEY){fail('تنظیمات config.js کامل نیست.');return}
+ if(!window.supabase?.createClient){fail('کتابخانه Supabase بارگذاری نشد. اتصال اینترنت را بررسی کنید.');return}
+ const client=window.supabase.createClient(config.SUPABASE_URL,config.SUPABASE_PUBLISHABLE_KEY);
+ let currentRole=null;
+ const cloudStatus=t=>{document.getElementById('status').textContent=t};
+ async function loadCloud(){
+  const {data,error}=await client.from('report_snapshots').select('id,period,filename,data,created_at').order('created_at',{ascending:true}).limit(500);
+  if(error){cloudStatus('خطا در دریافت گزارش‌ها: '+error.message+' | فایل SQL همراه را در Supabase اجرا کنید.');return}
+  if(data?.length){
+   history=data.map(x=>({period:x.period,data:x.data,cloud_id:x.id}));
+   periods();document.getElementById('periodSelect').value=String(history.length-1);active=-1;render();
+   cloudStatus(data.length+' گزارش از پایگاه داده مشترک بارگذاری شد.');
+  }else{
+   // Do not treat the embedded demo as a saved shared report.
+   history=[{period:'نمونه فایل ارسالی (فقط نمایشی)',data:INITIAL}];
+   periods();document.getElementById('periodSelect').value='0';active=-1;render();
+   cloudStatus('هنوز گزارش مشترکی ثبت نشده است؛ داده‌های فعلی فقط نمونه داخل فایل هستند. مدیر سیستم می‌تواند اولین اکسل را ثبت کند.');
+  }
+ }
+ window.TIHUB_CLOUD={
+  save:async()=>{
+   if(currentRole!=='admin'){alert('ثبت گزارش فقط برای Admin مجاز است.');return}
+   const f=document.getElementById('file').files[0];
+   if(!f){alert('ابتدا فایل اکسل را انتخاب کنید.');return}
+   if(typeof XLSX==='undefined'){alert('کتابخانه اکسل بارگذاری نشده است.');return}
+   const btn=document.getElementById('import');btn.disabled=true;
+   try{
+    const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});
+    const parsed=parseWorkbook(wb);
+    if(!parsed.length||!parsed.some(x=>x.rows?.length||x.segment?.length))throw Error('فایل گزارش معتبر ندارد');
+    const period=document.getElementById('period').value.trim()||f.name;
+    if(history.some(x=>x.cloud_id&&x.period===period)&&!confirm('این دوره قبلاً وجود دارد. نسخه جدید جداگانه ثبت شود؟'))return;
+    const {data:{user},error:authErr}=await client.auth.getUser();
+    if(authErr||!user)throw Error('نشست کاربری معتبر نیست');
+    const {error}=await client.from('report_snapshots').insert({period,filename:f.name,data:parsed,uploaded_by:user.id});
+    if(error)throw error;
+    await loadCloud();
+    cloudStatus('گزارش «'+period+'» با موفقیت در Supabase ذخیره شد و برای همه مدیران قابل مشاهده است.');
+   }catch(err){alert('خطا در ذخیره گزارش: '+err.message)}
+   finally{btn.disabled=false}
+  }
+ };
+
+ async function authorize(){
+  const {data:{user},error}=await client.auth.getUser();
+  if(error||!user){fail('برای ورود، نام کاربری و رمز عبور را وارد کنید.');return false}
+  const {data:roles,error:roleError}=await client.from('user_roles').select('role').eq('user_id',user.id);
+  if(roleError){fail('بررسی نقش کاربری انجام نشد: '+roleError.message);return false}
+  if(!roles?.some(x=>['manager','admin'].includes(x.role))){await client.auth.signOut();fail('این حساب مجوز مشاهده داشبورد را ندارد.');return false}
+  currentRole=roles.some(x=>x.role==='admin')?'admin':'manager';
+  document.getElementById('import').style.display=currentRole==='admin'?'':'none';
+  document.getElementById('file').style.display=currentRole==='admin'?'':'none';
+  document.getElementById('period').parentElement.style.display=currentRole==='admin'?'':'none';
+  document.body.classList.add('tihub-authenticated');
+  await loadCloud();
+  document.getElementById('tihub-logout').style.display='inline-block';
+  msg.textContent='';
+  return true;
+ }
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();button.disabled=true;msg.textContent='در حال ورود...';
+  try{const username=document.getElementById('tihub-email').value.trim().toLowerCase();
+   const aliases=window.TIHUB_CONFIG?.USERNAME_EMAILS||{};
+   const email=aliases[username];
+   if(!email||!/^\S+@\S+\.\S+$/.test(email)){fail('نام کاربری تعریف نشده است. ابتدا بخش USERNAME_EMAILS فایل config.js را تکمیل کنید.');return}
+   const {error}=await client.auth.signInWithPassword({email,password:document.getElementById('tihub-password').value});
+   document.getElementById('tihub-password').value='';
+   if(error){fail('ورود ناموفق بود. نام کاربری و رمز عبور را بررسی کنید.');return}
+   await authorize();
+  }catch(err){fail('خطا در اتصال به Supabase: '+err.message)}finally{button.disabled=false}
+ });
+ document.getElementById('tihub-logout').addEventListener('click',async()=>{await client.auth.signOut();currentRole=null;document.body.classList.remove('tihub-authenticated');fail('از حساب خارج شدید.');});
+ msg.textContent='در حال بررسی نشست کاربری...';
+ try{await authorize()}catch(e){fail('خطا در اتصال: '+e.message)}
+})();
+</script></body></html>
